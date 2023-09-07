@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title><div class="ask485">ask485</div></title>
+</head>
+
+<body>
+    <div class="feed">
+        <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+        <form action="/" method="GET">
+        <div class="search_bar"><input type="text" name="q" minlength="0" value="{{query}}"/></div>
+        <div class="pagerank_weight">Pagerank Weight</div>
+        <input type="range" name="w" min="0" max="1" step="0.01" value="{{weight}}"/>
+        <input type="submit" value="Search"/>
+        </form>
+
+        {% if doc_num == 0 %}
+            <div class="no_results">No search results found!</div>
+        {% else %}
+        <div class="docs">
+            {% for doc in documents %}
+            <a class="doc_url">
+                {% if doc.url == "" %}
+                    No url available
+                {% else %}
+                    {{doc.url}}
+                {% endif %}
+            </a>
+
+            <div class="doc_title">{{doc.title}}</div>
+
+            <div class="doc_summary">
+                {% if doc.summary == "" %}
+                    No summary available
+                {% else %}
+                    {{doc.summary}}
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+</body>
+
+</html>

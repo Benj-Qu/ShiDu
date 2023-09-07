@@ -1,0 +1,529 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.7, pytest-7.2.0, pluggy-1.0.0 -- /Users/cjy/eecs485/p5-search-engine/env/bin/python3.10
+cachedir: .pytest_cache
+rootdir: /Users/cjy/eecs485/p5-search-engine
+plugins: mock-3.10.0
+collecting ... collected 30 items
+
+tests/test_index_server_public.py::test_multiple_terms PASSED            [  3%]
+tests/test_index_server_public.py::test_special_characters PASSED        [  6%]
+tests/test_index_server_public.py::test_stopwords PASSED                 [ 10%]
+tests/test_index_server_public.py::test_term_not_in_index PASSED         [ 13%]
+tests/test_pipeline_public.py::test_doc_count_one_mapper PASSED          [ 16%]
+tests/test_pipeline_public.py::test_num_phases PASSED                    [ 20%]
+tests/test_pipeline_public.py::test_simple PASSED                        [ 23%]
+tests/test_pipeline_public.py::test_example PASSED                       [ 26%]
+tests/test_pipeline_public.py::test_uppercase PASSED                     [ 30%]
+tests/test_pipeline_public.py::test_uppercase_and_numbers PASSED         [ 33%]
+tests/test_pipeline_public.py::test_non_alphanumeric PASSED              [ 36%]
+tests/test_pipeline_public.py::test_many_docs PASSED                     [ 40%]
+tests/test_pipeline_public.py::test_segments PASSED                      [ 43%]
+tests/test_pipeline_public.py::test_sample_inverted_index PASSED         [ 46%]
+tests/test_scripts.py::test_executables PASSED                           [ 50%]
+tests/test_scripts.py::test_install PASSED                               [ 53%]
+tests/test_scripts.py::test_servers_start PASSED                         [ 56%]
+tests/test_scripts.py::test_servers_stop PASSED                          [ 60%]
+tests/test_scripts.py::test_servers_status PASSED                        [ 63%]
+tests/test_scripts.py::test_searchdb PASSED                              [ 66%]
+tests/test_search_server_public.py::test_concurrency PASSED              [ 70%]
+tests/test_search_server_public.py::test_inputs PASSED                   [ 73%]
+tests/test_search_server_public.py::test_simple PASSED                   [ 76%]
+tests/test_search_server_public.py::test_titles PASSED                   [ 80%]
+tests/test_search_server_public.py::test_summaries_urls PASSED           [ 83%]
+tests/test_search_server_public.py::test_html FAILED                     [ 86%]
+tests/test_style.py::test_pycodestyle FAILED                             [ 90%]
+tests/test_style.py::test_pydocstyle FAILED                              [ 93%]
+tests/test_style.py::test_pylint FAILED                                  [ 96%]
+tests/test_submission_files.py::test_files_exist PASSED                  [100%]
+
+=================================== FAILURES ===================================
+__________________________________ test_html ___________________________________
+
+search_client = <FlaskClient <Flask 'search'>>
+tmpdir = local('/private/var/folders/h0/htpjtrh57z53gn45nkqhfp2c0000gn/T/pytest-of-cjy/pytest-1/test_html0')
+
+    def test_html(search_client, tmpdir):
+        """Verify HTML5 compliance in HTML portion of the search pages.
+    
+        'search_client' is a fixture function that provides a Flask test server
+        interface
+    
+        Fixtures are implemented in conftest.py and reused by many tests.  Docs:
+        https://docs.pytest.org/en/latest/fixture.html
+    
+        'tmpdir' is a fixture provided by the pytest package.  It creates a
+        unique temporary directory before the test runs, and removes it afterward.
+        https://docs.pytest.org/en/6.2.x/tmpdir.html#the-tmpdir-fixture
+        """
+        # Validate HTML of search page before a search
+        download(search_client, "/", tmpdir/"index.html")
+>       subprocess.run(
+            [
+                "html5validator", "--ignore=JAVA_TOOL_OPTIONS",
+                str(tmpdir/"index.html"),
+            ],
+            check=True,
+        )
+
+tests/test_search_server_public.py:190: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['html5validator', '--ignore=JAVA_TOOL_OPTIONS', '/private/var/folders/h0/htpjtrh57z53gn45nkqhfp2c0000gn/T/pytest-of-cjy/pytest-1/test_html0/index.html'],)
+kwargs = {}
+process = <Popen: returncode: 1 args: ['html5validator', '--ignore=JAVA_TOOL_OPTIONS',...>
+stdout = None, stderr = None, retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['html5validator', '--ignore=JAVA_TOOL_OPTIONS', '/private/var/folders/h0/htpjtrh57z53gn45nkqhfp2c0000gn/T/pytest-of-cjy/pytest-1/test_html0/index.html']' returned non-zero exit status 1.
+
+/usr/local/Cellar/python@3.10/3.10.7/Frameworks/Python.framework/Versions/3.10/lib/python3.10/subprocess.py:524: CalledProcessError
+---------------------------- Captured stdout setup -----------------------------
+ * Serving Flask app 'index'
+ * Debug mode: off
+ * Serving Flask app 'index'
+ * Debug mode: off
+ * Serving Flask app 'index'
+ * Debug mode: off
+---------------------------- Captured stderr setup -----------------------------
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://localhost:62628
+[33mPress CTRL+C to quit[0m
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://localhost:62630
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [06/Dec/2022 12:11:47] "[33mGET / HTTP/1.1[0m" 404 -
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://localhost:62629
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [06/Dec/2022 12:11:47] "[33mGET / HTTP/1.1[0m" 404 -
+127.0.0.1 - - [06/Dec/2022 12:11:47] "[33mGET / HTTP/1.1[0m" 404 -
+----------------------------- Captured stdout call -----------------------------
+<Response [200]>
+<Response [200]><Response [200]>
+
+"file:/private/var/folders/h0/htpjtrh57z53gn45nkqhfp2c0000gn/T/pytest-of-cjy/pytest-1/test_html0/index.html":21.5-21.75: error: Bad value "None" for attribute "value" on element "input": Expected a minus sign or a digit but saw "N" instead.
+----------------------------- Captured stderr call -----------------------------
+127.0.0.1 - - [06/Dec/2022 12:11:47] "GET /api/v1/hits/ HTTP/1.1" 200 -
+127.0.0.1 - - [06/Dec/2022 12:11:47] "GET /api/v1/hits/ HTTP/1.1" 200 -
+127.0.0.1 - - [06/Dec/2022 12:11:47] "GET /api/v1/hits/ HTTP/1.1" 200 -
+_______________________________ test_pycodestyle _______________________________
+
+    def test_pycodestyle():
+        """Run pycodestyle."""
+        assert_no_prohibited_terms("nopep8", "noqa", "pylint")
+>       subprocess.run([
+            "pycodestyle",
+            "index_server/index",
+            "search_server/search",
+            "inverted_index",
+        ], check=True)
+
+tests/test_style.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['pycodestyle', 'index_server/index', 'search_server/search', 'inverted_index'],)
+kwargs = {}
+process = <Popen: returncode: 1 args: ['pycodestyle', 'index_server/index', 'search_se...>
+stdout = None, stderr = None, retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['pycodestyle', 'index_server/index', 'search_server/search', 'inverted_index']' returned non-zero exit status 1.
+
+/usr/local/Cellar/python@3.10/3.10.7/Frameworks/Python.framework/Versions/3.10/lib/python3.10/subprocess.py:524: CalledProcessError
+----------------------------- Captured stdout call -----------------------------
+search_server/search/__init__.py:19:73: W292 no newline at end of file
+search_server/search/config.py:11:41: W292 no newline at end of file
+search_server/search/model.py:46:26: W292 no newline at end of file
+search_server/search/views/index.py:24:80: E501 line too long (85 > 79 characters)
+search_server/search/views/index.py:50:80: E501 line too long (99 > 79 characters)
+search_server/search/views/index.py:59:32: W291 trailing whitespace
+search_server/search/views/index.py:61:80: E501 line too long (81 > 79 characters)
+search_server/search/views/index.py:64:1: W293 blank line contains whitespace
+search_server/search/views/index.py:66:26: W292 no newline at end of file
+inverted_index/map1.py:11:25: E271 multiple spaces after keyword
+inverted_index/map1.py:31:80: E501 line too long (84 > 79 characters)
+inverted_index/map3.py:9:80: E501 line too long (105 > 79 characters)
+inverted_index/reduce3.py:25:80: E501 line too long (92 > 79 characters)
+inverted_index/reduce3.py:27:51: E201 whitespace after '['
+inverted_index/reduce3.py:27:80: E501 line too long (81 > 79 characters)
+inverted_index/reduce3.py:31:80: E501 line too long (124 > 79 characters)
+_______________________________ test_pydocstyle ________________________________
+
+    def test_pydocstyle():
+        """Run pydocstyle."""
+        assert_no_prohibited_terms("nopep8", "noqa", "pylint")
+>       subprocess.run([
+            "pydocstyle",
+            "index_server",
+            "search_server/search",
+            "inverted_index",
+        ], check=True)
+
+tests/test_style.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['pydocstyle', 'index_server', 'search_server/search', 'inverted_index'],)
+kwargs = {}
+process = <Popen: returncode: 1 args: ['pydocstyle', 'index_server', 'search_server/se...>
+stdout = None, stderr = None, retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['pydocstyle', 'index_server', 'search_server/search', 'inverted_index']' returned non-zero exit status 1.
+
+/usr/local/Cellar/python@3.10/3.10.7/Frameworks/Python.framework/Versions/3.10/lib/python3.10/subprocess.py:524: CalledProcessError
+----------------------------- Captured stdout call -----------------------------
+search_server/search/views/index.py:16 in public function `show_index`:
+        D103: Missing docstring in public function
+search_server/search/views/index.py:49 in public function `index_request`:
+        D103: Missing docstring in public function
+search_server/search/views/index.py:56 in public function `get_results`:
+        D103: Missing docstring in public function
+----------------------------- Captured stderr call -----------------------------
+WARNING: The /Users/cjy/eecs485/p5-search-engine/index_server/pyproject.toml configuration file was ignored, because the `toml` package is not installed.
+WARNING: The /Users/cjy/eecs485/p5-search-engine/search_server/pyproject.toml configuration file was ignored, because the `toml` package is not installed.
+_________________________________ test_pylint __________________________________
+
+    def test_pylint():
+        """Run pylint."""
+        assert_no_prohibited_terms("nopep8", "noqa", "pylint")
+        mapreduce_files = glob.glob("inverted_index/*.py")
+>       subprocess.run([
+            "pylint",
+            "--rcfile", utils.TESTDATA_DIR/"pylintrc",
+            "--disable=cyclic-import",
+            "--unsafe-load-any-extension=y",
+            "--min-similarity-lines=10",
+            "index_server/index",
+            "search_server/search",
+            *mapreduce_files,
+        ], check=True)
+
+tests/test_style.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['pylint', '--rcfile', PosixPath('/Users/cjy/eecs485/p5-search-engine/tests/testdata/pylintrc'), '--disable=cyclic-import', '--unsafe-load-any-extension=y', '--min-similarity-lines=10', ...],)
+kwargs = {}
+process = <Popen: returncode: 20 args: ['pylint', '--rcfile', PosixPath('/Users/cjy/ee...>
+stdout = None, stderr = None, retcode = 20
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['pylint', '--rcfile', PosixPath('/Users/cjy/eecs485/p5-search-engine/tests/testdata/pylintrc'), '--disable=cyclic-import', '--unsafe-load-any-extension=y', '--min-similarity-lines=10', 'index_server/index', 'search_server/search', 'inverted_index/reduce2.py', 'inverted_index/reduce3.py', 'inverted_index/map2.py', 'inverted_index/map3.py', 'inverted_index/map0.py', 'inverted_index/map1.py', 'inverted_index/reduce0.py', 'inverted_index/reduce1.py']' returned non-zero exit status 20.
+
+/usr/local/Cellar/python@3.10/3.10.7/Frameworks/Python.framework/Versions/3.10/lib/python3.10/subprocess.py:524: CalledProcessError
+----------------------------- Captured stdout call -----------------------------
+************* Module search
+search_server/search/__init__.py:19:0: C0304: Final newline missing (missing-final-newline)
+************* Module search.config
+search_server/search/config.py:11:0: C0304: Final newline missing (missing-final-newline)
+search_server/search/config.py:2:0: W0611: Unused import pathlib (unused-import)
+************* Module search.model
+search_server/search/model.py:46:0: C0304: Final newline missing (missing-final-newline)
+************* Module search.views.index
+search_server/search/views/index.py:59:31: C0303: Trailing whitespace (trailing-whitespace)
+search_server/search/views/index.py:64:0: C0303: Trailing whitespace (trailing-whitespace)
+search_server/search/views/index.py:66:0: C0304: Final newline missing (missing-final-newline)
+search_server/search/views/index.py:16:0: C0116: Missing function or method docstring (missing-function-docstring)
+search_server/search/views/index.py:49:0: C0116: Missing function or method docstring (missing-function-docstring)
+search_server/search/views/index.py:50:13: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+search_server/search/views/index.py:56:0: C0116: Missing function or method docstring (missing-function-docstring)
+search_server/search/views/index.py:8:0: C0411: standard import "import heapq" should be placed before "import flask" (wrong-import-order)
+search_server/search/views/index.py:9:0: C0411: standard import "import threading" should be placed before "import flask" (wrong-import-order)
+search_server/search/views/index.py:10:0: C0411: standard import "import json" should be placed before "import flask" (wrong-import-order)
+search_server/search/views/index.py:6:0: W0611: Unused import os (unused-import)
+search_server/search/views/index.py:10:0: W0611: Unused import json (unused-import)
+************* Module reduce2
+inverted_index/reduce2.py:24:8: C0103: Variable name "tf" doesn't conform to snake_case naming style (invalid-name)
+************* Module reduce3
+inverted_index/reduce3.py:31:0: C0301: Line too long (124/100) (line-too-long)
+inverted_index/reduce3.py:18:21: W0613: Unused argument 'key' (unused-argument)
+************* Module map3
+inverted_index/map3.py:9:0: C0301: Line too long (105/100) (line-too-long)
+************* Module map0
+inverted_index/map0.py:12:14: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+************* Module map1
+inverted_index/map1.py:10:5: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+inverted_index/map1.py:14:5: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+inverted_index/map1.py:6:0: W0611: Unused import pathlib (unused-import)
+************* Module reduce0
+inverted_index/reduce0.py:18:21: W0613: Unused argument 'key' (unused-argument)
+************* Module reduce1
+inverted_index/reduce1.py:22:4: C0103: Variable name "nk" doesn't conform to snake_case naming style (invalid-name)
+inverted_index/reduce1.py:26:8: C0103: Variable name "tf" doesn't conform to snake_case naming style (invalid-name)
+inverted_index/reduce1.py:28:8: C0103: Variable name "nk" doesn't conform to snake_case naming style (invalid-name)
+inverted_index/reduce1.py:29:25: W0631: Using possibly undefined loop variable 'line' (undefined-loop-variable)
+inverted_index/reduce1.py:31:4: C0206: Consider iterating with .items() (consider-using-dict-items)
+inverted_index/reduce1.py:5:0: W0611: Unused import pathlib (unused-import)
+
+------------------------------------------------------------------
+Your code has been rated at 8.91/10 (previous run: 8.91/10, +0.00)
+
+=========================== short test summary info ============================
+FAILED tests/test_search_server_public.py::test_html - subprocess.CalledProce...
+FAILED tests/test_style.py::test_pycodestyle - subprocess.CalledProcessError:...
+FAILED tests/test_style.py::test_pydocstyle - subprocess.CalledProcessError: ...
+FAILED tests/test_style.py::test_pylint - subprocess.CalledProcessError: Comm...
+======================== 4 failed, 26 passed in 41.72s =========================
